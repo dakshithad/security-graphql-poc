@@ -1,0 +1,50 @@
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ResolveReference,
+} from '@nestjs/graphql';
+import { ProjectService } from './project.service';
+import { Project } from './entity/project.entity';
+import { CreateProjectInput } from './dto/create-project.input';
+import { UpdateProjectInput } from './dto/update-project.input';
+import { Roles } from '../auth/roles.decorator';
+
+@Resolver(() => Project)
+export class ProjectResolver {
+  constructor(private readonly projectService: ProjectService) {}
+
+  @Mutation(() => Project)
+  createProject(@Args('project') project: CreateProjectInput) {
+    return this.projectService.create(project);
+  }
+
+  @Roles('PRO-VIEW')
+  @Query(() => [Project], { name: 'getAllProjects' })
+  findAll() {
+    return this.projectService.findAll();
+  }
+
+  @Roles('PRO-VIEW')
+  @Query(() => Project, { name: 'project' })
+  findOne(@Args('id') id: string) {
+    return this.projectService.findOne(id);
+  }
+
+  @Mutation(() => Project)
+  updateProject(@Args('project') project: UpdateProjectInput) {
+    return this.projectService.update(project.id, project);
+  }
+
+  @Mutation(() => Project)
+  removeProject(@Args('id') id: string) {
+    return this.projectService.remove(id);
+  }
+
+  @ResolveReference()
+  resolvereferance(ref: { __typename: string; id: string }) {
+    return this.projectService.findOne(ref.id);
+  }
+}
