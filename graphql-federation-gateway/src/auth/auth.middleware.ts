@@ -20,6 +20,7 @@ export class AuthMiddleware implements NestMiddleware {
   }
 
   async use(req: Request | any, res: Response, next: () => void) {
+    req.authProcessStartTime = new Date().getTime();
     const bearerHeader = req.headers.authorization;
     const accessToken = bearerHeader && bearerHeader.split(' ')[1];
     let user: User;
