@@ -1,8 +1,11 @@
 import { RemoteGraphQLDataSource } from '@apollo/gateway';
 import { User } from './user.type';
+import * as fs from 'fs';
 import { FormatterOptionsArgs, Row, writeToStream } from '@fast-csv/format';
 
 export class AuthenticatedDataSource extends RemoteGraphQLDataSource {
+  private _times = [];
+  private _timeout: NodeJS.Timeout;
   willSendRequest({ context, request }: { context: any; request: any }) {
     const user: User = context?.req?.user;
     if (user) {
@@ -17,14 +20,18 @@ export class AuthenticatedDataSource extends RemoteGraphQLDataSource {
     if (startTime) {
       const endTime = new Date().getTime();
       const totalTime = endTime - startTime;
-      (async function () {
-        console.log(`${totalTime} ms`);
-        // await AuthenticatedDataSource.write(
-        //   fs.createWriteStream('times.csv', { flags: 'a' }),
-        //   [{ time: totalTime }],
-        //   { includeEndRowDelimiter: true },
-        // );
-      })();
+
+      console.log(`${this._times.length} - ${totalTime} ms`);
+      this._times.push(totalTime);
+
+      clearTimeout(this._timeout);
+      this._timeout = setTimeout(async () => {
+        await AuthenticatedDataSource.write(
+          fs.createWriteStream('times.csv', { flags: 'a' }),
+          this._times.map((time) => ({ time })),
+          { includeEndRowDelimiter: true },
+        );
+      }, 2000);
     }
   }
 
