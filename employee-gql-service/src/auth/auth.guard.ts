@@ -14,19 +14,21 @@ export class AuthGuard implements CanActivate {
 
       const headers = request.headers;
 
-      const user = new User(
-        headers['x-user-id'],
-        headers['x-user-email'],
-        JSON.parse(headers['x-user-roles']),
-        headers['x-user-name'],
-        headers['x-user-token'],
-      );
+      if (headers['x-user-roles']) {
+        const user = new User(
+          headers['x-user-id'],
+          headers['x-user-email'],
+          JSON.parse(headers['x-user-roles']),
+          headers['x-user-name'],
+          headers['x-user-token'],
+        );
 
-      request.user = user;
+        request.user = user;
 
-      console.log('user-id', user.username);
+        console.log('user-id', user.username);
 
-      return true;
+        return true;
+      }
     }
   }
 }
