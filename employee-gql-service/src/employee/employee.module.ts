@@ -8,6 +8,11 @@ import { LocationResolver } from './location.resolver';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Employee])],
-  providers: [EmployeeService, EmployeeResolver, ProjectResolver, LocationResolver]
+  providers: [
+    EmployeeService,
+    EmployeeResolver,
+    ProjectResolver,
+    LocationResolver,
+  ],
 })
-export class EmployeeModule { }
+export class EmployeeModule {}

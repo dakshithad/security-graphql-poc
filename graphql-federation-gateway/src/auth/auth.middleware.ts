@@ -13,7 +13,7 @@ export class AuthMiddleware implements NestMiddleware {
   ) {
     this._jwksClient = new JwksClient({
       cache: true,
-      cacheMaxEntries: 25,
+      cacheMaxEntries: 100,
       rateLimit: true,
       jwksRequestsPerMinute: 10,
       jwksUri: _authConfig.jwksUri,

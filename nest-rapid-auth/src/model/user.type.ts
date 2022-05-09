@@ -1,4 +1,4 @@
-export class User {
+export class RapidUser {
   username: string;
   email: string;
   roles: string[];
@@ -17,5 +17,11 @@ export class User {
       (this.roles = roles),
       (this.name = name),
       (this.token = token);
+  }
+
+  public toString() {
+    const user = { ...this };
+    delete user.token;
+    return JSON.stringify(user);
   }
 }

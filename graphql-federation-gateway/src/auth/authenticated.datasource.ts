@@ -2,6 +2,13 @@ import { RemoteGraphQLDataSource } from '@apollo/gateway';
 import { User } from './user.type';
 import * as fs from 'fs';
 import { FormatterOptionsArgs, Row, writeToStream } from '@fast-csv/format';
+import {
+  RAPID_AUTH_HEADER_EMAIL,
+  RAPID_AUTH_HEADER_NAME,
+  RAPID_AUTH_HEADER_ROLES,
+  RAPID_AUTH_HEADER_TOKEN,
+  RAPID_AUTH_HEADER_USERNAME,
+} from './auth.constants';
 
 export class AuthenticatedDataSource extends RemoteGraphQLDataSource {
   private _times = [];
@@ -9,11 +16,14 @@ export class AuthenticatedDataSource extends RemoteGraphQLDataSource {
   willSendRequest({ context, request }: { context: any; request: any }) {
     const user: User = context?.req?.user;
     if (user) {
-      request.http.headers.set('x-user-id', user.username);
-      request.http.headers.set('x-user-email', user.email);
-      request.http.headers.set('x-user-roles', JSON.stringify(user.roles));
-      request.http.headers.set('x-user-token', user.token);
-      request.http.headers.set('x-user-name', user.name);
+      request.http.headers.set(RAPID_AUTH_HEADER_USERNAME, user.username);
+      request.http.headers.set(RAPID_AUTH_HEADER_EMAIL, user.email);
+      request.http.headers.set(
+        RAPID_AUTH_HEADER_ROLES,
+        JSON.stringify(user.roles),
+      );
+      request.http.headers.set(RAPID_AUTH_HEADER_TOKEN, user.token);
+      request.http.headers.set(RAPID_AUTH_HEADER_NAME, user.name);
     }
 
     const startTime = context?.req?.authProcessStartTime;

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { RapidAuthService } from 'nest-rapid-auth';
 import { Repository } from 'typeorm';
 import { EmployeeCreateDTO } from './dto/create-employee.input';
 import { Employee } from './entity/employee.entity';
@@ -9,6 +10,7 @@ export class EmployeeService {
   constructor(
     @InjectRepository(Employee)
     private employeeRepository: Repository<Employee>,
+    private rapidAuthService: RapidAuthService,
   ) {}
 
   async findAll(): Promise<Employee[]> {

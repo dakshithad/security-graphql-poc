@@ -6,24 +6,22 @@ import {
   ResolveField,
   Parent,
   Info,
-  Context,
 } from '@nestjs/graphql';
 import { EmployeeCreateDTO } from './dto/create-employee.input';
 import { EmployeeService } from './employee.service';
 import { Employee } from './entity/employee.entity';
 import { Project } from './entity/project.entity';
 import { Location } from './entity/location.entity';
-import { Roles } from '../auth/roles.decorator';
-import { CurrentUser } from '../auth/current-user.decorator';
-import { User } from '../auth/user.type';
+import { Roles, CurrentUser, RapidUser } from 'nest-rapid-auth';
+
 @Resolver(() => Employee)
 export class EmployeeResolver {
   constructor(private employeeService: EmployeeService) {}
 
   @Roles('EMP-VIEW')
   @Query(() => [Employee], { name: 'getAllEmployees' })
-  findAll(@CurrentUser() currentUser: User) {
-    console.log('currentUser', currentUser);
+  findAll(@CurrentUser() currentUser: RapidUser) {
+    console.log('currentUser', currentUser?.username);
     return this.employeeService.findAll();
   }
 

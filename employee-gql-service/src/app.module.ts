@@ -1,15 +1,17 @@
 import { Module } from '@nestjs/common';
 import { EmployeeModule } from './employee/employee.module';
-import { GraphQLFederationModule, GraphQLModule } from '@nestjs/graphql';
+import { GraphQLFederationModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { Project } from './employee/entity/project.entity';
 import { Location } from 'graphql';
-import { AuthModule } from './auth/auth.module';
+import { RapidAuthModule } from 'nest-rapid-auth';
 
 @Module({
   imports: [
-    AuthModule,
+    RapidAuthModule.register({
+      federation: 'http://localhost:4000',
+    }),
     EmployeeModule,
     GraphQLFederationModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/graphql-schema.gql'),
