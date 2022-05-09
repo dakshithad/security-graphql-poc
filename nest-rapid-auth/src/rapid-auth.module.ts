@@ -14,6 +14,7 @@ import {
 } from './rapid-auth-module-options.interface';
 import { AuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/roles.guard';
+import { RapidAuthService } from './services';
 
 @Global()
 @Module({})
@@ -38,8 +39,9 @@ export class RapidAuthModule {
           provide: APP_GUARD,
           useClass: RolesGuard,
         },
+        RapidAuthService,
       ],
-      exports: [RAPID_AUTH_MODULE_OPTIONS],
+      exports: [RAPID_AUTH_MODULE_OPTIONS, RapidAuthService],
     };
   }
 
@@ -60,8 +62,9 @@ export class RapidAuthModule {
           provide: APP_GUARD,
           useClass: RolesGuard,
         },
+        RapidAuthService,
       ],
-      exports: [RAPID_AUTH_MODULE_OPTIONS],
+      exports: [RAPID_AUTH_MODULE_OPTIONS, RapidAuthService],
     };
   }
 

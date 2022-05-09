@@ -14,6 +14,8 @@ export class EmployeeService {
   ) {}
 
   async findAll(): Promise<Employee[]> {
+    console.log(this.rapidAuthService.getCurrentUser());
+
     return this.employeeRepository.find();
   }
   async findOne(id: string) {

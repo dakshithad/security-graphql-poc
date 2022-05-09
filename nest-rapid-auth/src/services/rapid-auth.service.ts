@@ -1,9 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Scope } from '@nestjs/common';
+import { CONTEXT } from '@nestjs/graphql';
 import { RapidUser } from '../model';
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class RapidAuthService {
-  async getPhone(user: RapidUser) {
-    return '000-0000-0000';
+  constructor(@Inject(CONTEXT) private context: any) {}
+
+  getCurrentUser(): RapidUser {
+    const request = this.context.req;
+    if (request) {
+      return request?.user as RapidUser;
+    }
   }
 }
